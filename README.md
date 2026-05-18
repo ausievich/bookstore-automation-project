@@ -98,13 +98,11 @@ flowchart LR
   HTML --> SRV
 ```
 
-## CI (GitHub Actions)
+## CI
 
-Workflow: `.github/workflows/ci.yml` — `quality` → `test` → `allure-report` (generate + GitHub Pages on `main`).
+On every push and PR to `main`: **Quality Gates** (typecheck, lint) → **Playwright Tests** → **Allure Report**. Workflow: `.github/workflows/ci.yml`.
 
-**Live Allure report:** https://ausievich.github.io/bookstore-automation-project/
-
-Pages: **Settings → Pages → Source: GitHub Actions** (once). Locally: `npm run allure:open` or `npx serve allure-report` (not `file://`).
+**Allure Report:** https://ausievich.github.io/bookstore-automation-project/
 
 ## Remaining / bonus (optional)
 
