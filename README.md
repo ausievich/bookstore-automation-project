@@ -21,8 +21,7 @@ npm test
 
 ## Allure report
 
-**Prerequisite:** [JDK 17+](https://adoptium.net/) (required by `allure-commandline` to build the HTML report).  
-`npm run allure:*` auto-detects a local JDK if `JAVA_HOME` is missing or invalid. If you see `JAVA_HOME is set to an invalid directory`, remove the broken user/system `JAVA_HOME` variable in Windows environment settings (a bad value like `= 1>&2` breaks the Allure CLI).
+Requires [JDK 17+](https://adoptium.net/) for `npm run allure:generate`.
 
 Run tests, generate the report, and open it in the browser:
 
@@ -101,34 +100,11 @@ flowchart LR
 
 ## CI (GitHub Actions)
 
-Workflow: `.github/workflows/ci.yml` (push/PR to `main`).
+Workflow: `.github/workflows/ci.yml` — `quality` → `test` → `allure-report` (generate + GitHub Pages on `main`).
 
-Jobs (order via `needs:`; each job is a fresh VM — reuse is via npm/Playwright caches, not shared disks):
+**Live Allure report:** https://ausievich.github.io/bookstore-automation-project/
 
-| Job | What it runs |
-|-----|----------------|
-| `quality` | `typecheck` + `lint` (one `npm ci`) |
-| `test` | `npm test` with Playwright (cached browsers) |
-| `allure-report` | `npm run allure:generate` → artifact `allure-report` |
-| `deploy-allure` | publish report to GitHub Pages (push to `main` only) |
-
-Shared setup: `.github/actions/setup-node-project` (`npm ci` + optional Playwright install with cache).
-
-**Live report (after push to `main`):** https://ausievich.github.io/bookstore-automation-project/
-
-One-time repo setting: **Settings → Pages → Build and deployment → Source: GitHub Actions**.
-
-Do not open `index.html` from Downloads via `file://` — the UI shows `500 Failed to fetch`. Use the Pages link above, or locally: `npm run allure:open` / `npx serve allure-report`.
-
-Fallback: download the **allure-report** artifact (Actions → run → Artifacts) and run `npx serve allure-report` before opening in the browser.
-
-There is no external host in CI. Playwright starts the mock app on the runner via `webServer` in `playwright.config.ts`:
-
-- `npm run server` → Express + demo UI on `http://localhost:3000`
-- readiness: `GET /health`
-- with `CI=true`, `reuseExistingServer` is off (fresh server per run)
-
-Optional env overrides (local or CI): `BASE_URL`, `API_URL`, `PORT` (server port).
+Pages: **Settings → Pages → Source: GitHub Actions** (once). Locally: `npm run allure:open` or `npx serve allure-report` (not `file://`).
 
 ## Remaining / bonus (optional)
 
