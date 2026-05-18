@@ -1,4 +1,7 @@
-import { test as base } from '@playwright/test';
+import { owner, feature } from 'allure-js-commons';
+
+/** Allure metadata — single entry point (replaces deprecated `allure` from allure-playwright) */
+export const allure = { owner, feature };
 
 /** TestRail / traceability — use in test title or call in test body */
 export function tmsLink(id: string): string {
@@ -9,13 +12,3 @@ export function tmsLink(id: string): string {
 export const Owner = {
   Bookstore: 'bookstore-qa',
 } as const;
-
-export const test = base.extend({
-  tms: async ({}, use, testInfo) => {
-    const match = testInfo.title.match(/@TmsLink:(\w+)/);
-    if (match) {
-      testInfo.annotations.push({ type: 'tms', description: match[1] });
-    }
-    await use(undefined);
-  },
-});

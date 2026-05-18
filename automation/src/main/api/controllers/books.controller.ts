@@ -4,7 +4,7 @@ import { CreateBookRequest, BookDto, BooksPageDto, ApiErrorDto } from '@automati
 export class BooksController {
   constructor(private readonly http: HttpClient) {}
 
-  list(params?: { page?: number; search?: string; category?: string; sort?: string }) {
+  list(params?: { page?: number; limit?: number; search?: string; category?: string; sort?: string }) {
     return this.http.request<BooksPageDto>({
       method: 'GET',
       url: '/api/books',

@@ -9,8 +9,7 @@ import { CatalogSteps } from '@automation/main/ui/steps/catalog.steps';
 import { CartSteps } from '@automation/main/ui/steps/cart.steps';
 import { CheckoutSteps } from '@automation/main/ui/steps/checkout.steps';
 import { TestUsers } from '@automation/main/common/constants/credentials';
-import { allure } from 'allure-playwright';
-import { Owner } from '@automation/main/common/annotations';
+import { Owner, allure } from '@automation/main/common/annotations';
 
 test.describe('Checkout Flow', () => {
   test.beforeEach(async ({ page }) => {

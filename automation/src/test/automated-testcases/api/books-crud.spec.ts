@@ -5,8 +5,7 @@
  */
 import { test, expect } from '@automation/test/test-base/fixtures';
 import { BookBuilder } from '@automation/main/api/builders/book.builder';
-import { allure } from 'allure-playwright';
-import { Owner } from '@automation/main/common/annotations';
+import { Owner, allure } from '@automation/main/common/annotations';
 
 test.describe('Books CRUD API', () => {
   test.beforeEach(async () => {

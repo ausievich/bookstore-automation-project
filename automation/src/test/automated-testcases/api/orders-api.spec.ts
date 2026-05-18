@@ -4,8 +4,7 @@
  * Owner: bookstore-qa
  */
 import { test, expect } from '@automation/test/test-base/fixtures';
-import { allure } from 'allure-playwright';
-import { Owner } from '@automation/main/common/annotations';
+import { Owner, allure } from '@automation/main/common/annotations';
 
 const shipping = { name: 'API User', address: '1 Test Rd', city: 'Testville', zip: '00000' };
 const payment = { cardLast4: '9999' };

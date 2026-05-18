@@ -7,8 +7,7 @@
 import { test } from '@automation/test/test-base/fixtures';
 import { LoginSteps } from '@automation/main/ui/steps/login.steps';
 import { TestUsers } from '@automation/main/common/constants/credentials';
-import { Owner } from '@automation/main/common/annotations';
-import { allure } from 'allure-playwright';
+import { Owner, allure } from '@automation/main/common/annotations';
 
 test.describe('User Login', () => {
   test.beforeEach(async () => {

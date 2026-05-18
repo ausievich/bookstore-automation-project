@@ -8,8 +8,7 @@ import { LoginSteps } from '@automation/main/ui/steps/login.steps';
 import { CatalogSteps } from '@automation/main/ui/steps/catalog.steps';
 import { CatalogPage } from '@automation/main/ui/pages/catalog.page';
 import { TestUsers } from '@automation/main/common/constants/credentials';
-import { allure } from 'allure-playwright';
-import { Owner } from '@automation/main/common/annotations';
+import { Owner, allure } from '@automation/main/common/annotations';
 
 test.describe('Book Search & Filtering', () => {
   test.beforeEach(async ({ page }) => {

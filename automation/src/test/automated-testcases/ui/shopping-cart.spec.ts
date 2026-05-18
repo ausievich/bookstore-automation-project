@@ -3,13 +3,12 @@
  * Feature: Shopping Cart
  * Owner: bookstore-qa
  */
-import { test, expect } from '@automation/test/test-base/fixtures';
+import { test } from '@automation/test/test-base/fixtures';
 import { LoginSteps } from '@automation/main/ui/steps/login.steps';
 import { CatalogSteps } from '@automation/main/ui/steps/catalog.steps';
 import { CartSteps } from '@automation/main/ui/steps/cart.steps';
 import { TestUsers } from '@automation/main/common/constants/credentials';
-import { allure } from 'allure-playwright';
-import { Owner } from '@automation/main/common/annotations';
+import { Owner, allure } from '@automation/main/common/annotations';
 
 test.describe('Shopping Cart', () => {
   test.beforeEach(async ({ page }) => {

@@ -4,8 +4,7 @@
  * Owner: bookstore-qa
  */
 import { test, expect } from '@automation/test/test-base/fixtures';
-import { allure } from 'allure-playwright';
-import { Owner } from '@automation/main/common/annotations';
+import { Owner, allure } from '@automation/main/common/annotations';
 
 test.describe('Cart API', () => {
   test.beforeEach(async ({ authToken }) => {

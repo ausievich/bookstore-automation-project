@@ -9,6 +9,7 @@
     "test:ui": "playwright test automation/src/test/automated-testcases/ui",
     "test:api": "playwright test automation/src/test/automated-testcases/api",
     "lint": "eslint \"automation/**/*.ts\" \"mock-server/**/*.ts\"",
+    "typecheck": "tsc --noEmit",
     "allure:generate": "allure generate allure-results -o allure-report --clean",
     "allure:open": "allure open allure-report"
   },
@@ -19,6 +20,7 @@
     "@types/express": "^5.0.2",
     "@types/node": "^22.15.21",
     "allure-commandline": "^2.34.0",
+    "allure-js-commons": "^3.8.0",
     "allure-playwright": "^3.2.2",
     "axios": "^1.9.0",
     "cors": "^2.8.5",
