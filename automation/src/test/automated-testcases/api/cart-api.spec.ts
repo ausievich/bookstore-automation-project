@@ -4,11 +4,11 @@
  * Owner: bookstore-qa
  */
 import { test, expect } from '@automation/test/test-base/fixtures';
-import { Owner, allure } from '@automation/main/common/annotations';
+import { Owner, allureMetadata } from '@automation/main/common/annotations';
 
 test.describe('Cart API', () => {
   test.beforeEach(async ({ authToken }) => {
-    await allure.owner(Owner.Bookstore);
+    await allureMetadata({ layer: 'API', owner: Owner.Bookstore });
     expect(authToken).toBeTruthy();
   });
 

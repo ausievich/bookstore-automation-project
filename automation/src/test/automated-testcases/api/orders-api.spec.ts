@@ -4,14 +4,14 @@
  * Owner: bookstore-qa
  */
 import { test, expect } from '@automation/test/test-base/fixtures';
-import { Owner, allure } from '@automation/main/common/annotations';
+import { Owner, allureMetadata } from '@automation/main/common/annotations';
 
 const shipping = { name: 'API User', address: '1 Test Rd', city: 'Testville', zip: '00000' };
 const payment = { cardLast4: '9999' };
 
 test.describe('Orders API', () => {
   test.beforeEach(async ({ cartApi, authToken }) => {
-    await allure.owner(Owner.Bookstore);
+    await allureMetadata({ layer: 'API', owner: Owner.Bookstore });
     expect(authToken).toBeTruthy();
     await cartApi.addItem('b3', 1);
   });

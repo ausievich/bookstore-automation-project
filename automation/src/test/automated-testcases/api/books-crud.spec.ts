@@ -5,12 +5,11 @@
  */
 import { test, expect } from '@automation/test/test-base/fixtures';
 import { BookBuilder } from '@automation/main/api/builders/book.builder';
-import { Owner, allure } from '@automation/main/common/annotations';
+import { Owner, allureMetadata } from '@automation/main/common/annotations';
 
 test.describe('Books CRUD API', () => {
   test.beforeEach(async () => {
-    await allure.owner(Owner.Bookstore);
-    await allure.feature('Books API');
+    await allureMetadata({ layer: 'API', owner: Owner.Bookstore });
   });
 
   test('@TmsLink:C5001 GET /api/books returns paginated list', async ({ booksApi }) => {

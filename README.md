@@ -43,7 +43,7 @@ npm run allure:open
 | `allure-results/` | Raw results from the last `npm test` (gitignored) |
 | `allure-report/` | Generated HTML report (gitignored) |
 
-Tests attach **owner** and **feature** labels via `allure` in `@automation/main/common/annotations` — use the **Behaviors** tab in the report to browse by feature.
+Tests attach Allure labels via `allureMetadata({ layer, owner })` — **Suites** groups by `layer` then `test.describe` name.
 
 ## Demo application
 

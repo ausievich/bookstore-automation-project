@@ -8,12 +8,11 @@ import { LoginSteps } from '@automation/main/ui/steps/login.steps';
 import { CatalogSteps } from '@automation/main/ui/steps/catalog.steps';
 import { CatalogPage } from '@automation/main/ui/pages/catalog.page';
 import { TestUsers } from '@automation/main/common/constants/credentials';
-import { Owner, allure } from '@automation/main/common/annotations';
+import { Owner, allureMetadata } from '@automation/main/common/annotations';
 
 test.describe('Book Search & Filtering', () => {
   test.beforeEach(async ({ page }) => {
-    await allure.owner(Owner.Bookstore);
-    await allure.feature('Catalog');
+    await allureMetadata({ layer: 'UI', owner: Owner.Bookstore });
     const login = new LoginSteps(page);
     await login.loginAsValidUser(TestUsers.valid.email, TestUsers.valid.password);
   });

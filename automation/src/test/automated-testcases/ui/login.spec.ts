@@ -7,12 +7,11 @@
 import { test } from '@automation/test/test-base/fixtures';
 import { LoginSteps } from '@automation/main/ui/steps/login.steps';
 import { TestUsers } from '@automation/main/common/constants/credentials';
-import { Owner, allure } from '@automation/main/common/annotations';
+import { Owner, allureMetadata } from '@automation/main/common/annotations';
 
 test.describe('User Login', () => {
   test.beforeEach(async () => {
-    await allure.owner(Owner.Bookstore);
-    await allure.feature('Login');
+    await allureMetadata({ layer: 'UI', owner: Owner.Bookstore });
   });
 
   test('@TmsLink:C1001 valid login shows catalog dashboard', async ({ page }) => {
