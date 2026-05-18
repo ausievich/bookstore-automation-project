@@ -99,9 +99,21 @@ flowchart LR
   HTML --> SRV
 ```
 
+## CI (GitHub Actions)
+
+Workflow: `.github/workflows/ci.yml` (push/PR to `main`).
+
+There is no external host in CI. Playwright starts the mock app on the runner via `webServer` in `playwright.config.ts`:
+
+- `npm run server` → Express + demo UI on `http://localhost:3000`
+- readiness: `GET /health`
+- with `CI=true`, `reuseExistingServer` is off (fresh server per run)
+
+Optional env overrides (local or CI): `BASE_URL`, `API_URL`, `PORT` (server port).
+
 ## Remaining / bonus (optional)
 
-- [ ] GitHub Actions CI
+- [x] GitHub Actions CI
 - [ ] Docker Compose
 - [ ] Visual regression
 - [ ] TestRail reporter (live integration)
