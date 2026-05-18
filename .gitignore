@@ -8,3 +8,6 @@ allure-report/
 .idea/
 *.log
 .DS_Store
+
+# Local assignment spec
+docs/Test_Task_QA_Automation.docx
