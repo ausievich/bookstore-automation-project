@@ -19,12 +19,31 @@ npx playwright install chromium
 npm test
 ```
 
-Allure report:
+## Allure report
+
+**Prerequisite:** [JDK 17+](https://adoptium.net/) (required by `allure-commandline` to build the HTML report).  
+`npm run allure:*` auto-detects a local JDK if `JAVA_HOME` is missing or invalid. If you see `JAVA_HOME is set to an invalid directory`, remove the broken user/system `JAVA_HOME` variable in Windows environment settings (a bad value like `= 1>&2` breaks the Allure CLI).
+
+Run tests, generate the report, and open it in the browser:
 
 ```bash
+npm run report
+```
+
+Or step by step (e.g. re-open an existing report without re-running tests):
+
+```bash
+npm test
 npm run allure:generate
 npm run allure:open
 ```
+
+| Output | Description |
+|--------|-------------|
+| `allure-results/` | Raw results from the last `npm test` (gitignored) |
+| `allure-report/` | Generated HTML report (gitignored) |
+
+Tests attach **owner** and **feature** labels via `allure` in `@automation/main/common/annotations` — use the **Behaviors** tab in the report to browse by feature.
 
 ## Demo application
 

@@ -10,8 +10,9 @@
     "test:api": "playwright test automation/src/test/automated-testcases/api",
     "lint": "eslint \"automation/**/*.ts\" \"mock-server/**/*.ts\"",
     "typecheck": "tsc --noEmit",
-    "allure:generate": "allure generate allure-results -o allure-report --clean",
-    "allure:open": "allure open allure-report"
+    "allure:generate": "node scripts/allure-run.mjs generate allure-results -o allure-report --clean",
+    "allure:open": "node scripts/allure-run.mjs open allure-report",
+    "report": "npm test && npm run allure:generate && npm run allure:open"
   },
   "devDependencies": {
     "@eslint/js": "^9.28.0",
