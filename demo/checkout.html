@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Checkout — Online Bookstore</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <header><h1>Checkout</h1></header>
+  <main>
+    <div class="card">
+      <div class="steps">
+        <span class="step active" data-testid="step-shipping">1. Shipping</span>
+        <span class="step" data-testid="step-payment">2. Payment</span>
+        <span class="step" data-testid="step-review">3. Review</span>
+      </div>
+
+      <section data-testid="shipping-section">
+        <h2>Shipping details</h2>
+        <label>Name <input data-testid="ship-name" /></label>
+        <label>Address <input data-testid="ship-address" /></label>
+        <label>City <input data-testid="ship-city" /></label>
+        <label>ZIP <input data-testid="ship-zip" /></label>
+        <button type="button" data-testid="shipping-next">Continue to payment</button>
+      </section>
+
+      <section class="hidden" data-testid="payment-section">
+        <h2>Payment</h2>
+        <label>Card number <input data-testid="card-number" placeholder="4111111111111111" /></label>
+        <label>Last 4 digits <input data-testid="card-last4" maxlength="4" /></label>
+        <button type="button" data-testid="payment-next">Review order</button>
+      </section>
+
+      <section class="hidden" data-testid="review-section">
+        <h2>Order summary</h2>
+        <div data-testid="order-summary"></div>
+        <button type="button" data-testid="confirm-order">Place order</button>
+      </section>
+    </div>
+  </main>
+  <script src="js/app.js"></script>
+  <script>
+    BookstoreApp.requireAuth();
+    const shipping = { name: '', address: '', city: '', zip: '' };
+
+    function showStep(step) {
+      document.querySelector('[data-testid="shipping-section"]').classList.toggle('hidden', step !== 'shipping');
+      document.querySelector('[data-testid="payment-section"]').classList.toggle('hidden', step !== 'payment');
+      document.querySelector('[data-testid="review-section"]').classList.toggle('hidden', step !== 'review');
+    }
+
+    document.querySelector('[data-testid="shipping-next"]').addEventListener('click', () => {
+      shipping.name = document.querySelector('[data-testid="ship-name"]').value;
+      shipping.address = document.querySelector('[data-testid="ship-address"]').value;
+      shipping.city = document.querySelector('[data-testid="ship-city"]').value;
+      shipping.zip = document.querySelector('[data-testid="ship-zip"]').value;
+      showStep('payment');
+    });
+
+    document.querySelector('[data-testid="payment-next"]').addEventListener('click', async () => {
+      const cart = await BookstoreApp.api('/api/cart');
+      document.querySelector('[data-testid="order-summary"]').textContent =
+        `Ship to ${shipping.name}, ${shipping.address}, ${shipping.city} ${shipping.zip}. Total: $${cart.subtotal.toFixed(2)}`;
+      showStep('review');
+    });
+
+    document.querySelector('[data-testid="confirm-order"]').addEventListener('click', async () => {
+      const last4 = document.querySelector('[data-testid="card-last4"]').value || '1111';
+      const order = await BookstoreApp.api('/api/orders', {
+        method: 'POST',
+        body: JSON.stringify({ shipping, payment: { cardLast4: last4 } }),
+      });
+      window.location.href = `order-success.html?orderId=${encodeURIComponent(order.id)}`;
+    });
+  </script>
+</body>
+</html>

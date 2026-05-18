@@ -1,0 +1,52 @@
+* { box-sizing: border-box; }
+body {
+  font-family: system-ui, sans-serif;
+  margin: 0;
+  background: #f6f8fb;
+  color: #1a1a2e;
+}
+header {
+  background: #1e3a5f;
+  color: #fff;
+  padding: 1rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+header a { color: #b8d4ff; margin-left: 1rem; text-decoration: none; }
+main { max-width: 960px; margin: 2rem auto; padding: 0 1rem; }
+.card {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,.08);
+}
+label { display: block; margin-top: .75rem; font-weight: 600; }
+input, select, button {
+  margin-top: .35rem;
+  padding: .5rem .75rem;
+  font-size: 1rem;
+}
+button {
+  cursor: pointer;
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+}
+button.secondary { background: #64748b; }
+.error { color: #b91c1c; margin-top: .5rem; }
+.success { color: #15803d; }
+.validation { color: #b45309; font-size: .9rem; }
+.book-list { list-style: none; padding: 0; }
+.book-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: .75rem 0;
+  border-bottom: 1px solid #e2e8f0;
+}
+#cart-counter { font-weight: bold; }
+.hidden { display: none !important; }
+.steps { display: flex; gap: 1rem; margin-bottom: 1rem; }
+.step.active { font-weight: 700; color: #2563eb; }

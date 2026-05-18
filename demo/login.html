@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Login — Online Bookstore</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <header><h1>Online Bookstore</h1></header>
+  <main>
+    <div class="card" style="max-width:400px;margin:auto">
+      <h2 data-testid="login-heading">Sign in</h2>
+      <form id="login-form">
+        <label for="email">Email</label>
+        <input id="email" name="email" type="email" data-testid="email-input" />
+        <p class="validation hidden" data-testid="email-validation">Email is required</p>
+
+        <label for="password">Password</label>
+        <input id="password" name="password" type="password" data-testid="password-input" />
+        <p class="validation hidden" data-testid="password-validation">Password is required</p>
+
+        <p class="error hidden" data-testid="login-error" role="alert"></p>
+        <button type="submit" data-testid="login-submit" style="margin-top:1rem">Sign in</button>
+      </form>
+    </main>
+  </main>
+  <script src="js/app.js"></script>
+  <script>
+    const form = document.getElementById('login-form');
+    const emailVal = document.querySelector('[data-testid="email-validation"]');
+    const passVal = document.querySelector('[data-testid="password-validation"]');
+    const errEl = document.querySelector('[data-testid="login-error"]');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      emailVal.classList.add('hidden');
+      passVal.classList.add('hidden');
+      errEl.classList.add('hidden');
+
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+      let valid = true;
+      if (!email) { emailVal.classList.remove('hidden'); valid = false; }
+      if (!password) { passVal.classList.remove('hidden'); valid = false; }
+      if (!valid) return;
+
+      try {
+        const data = await BookstoreApp.api('/api/auth/login', {
+          method: 'POST',
+          body: JSON.stringify({ email, password }),
+        });
+        BookstoreApp.setToken(data.token);
+        window.location.href = 'catalog.html';
+      } catch (err) {
+        errEl.textContent = err.message === 'Invalid credentials' ? 'Invalid email or password' : err.message;
+        errEl.classList.remove('hidden');
+      }
+    });
+  </script>
+</body>
+</html>

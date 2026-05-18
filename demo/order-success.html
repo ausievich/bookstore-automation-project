@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Order placed — Online Bookstore</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <main>
+    <div class="card">
+      <h1 class="success" data-testid="order-success-heading">Order placed successfully!</h1>
+      <p>Your order number is <strong data-testid="order-number"></strong></p>
+      <a href="orders.html" data-testid="view-orders-link">View my orders</a>
+    </div>
+  </main>
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    document.querySelector('[data-testid="order-number"]').textContent = params.get('orderId') || '';
+  </script>
+</body>
+</html>

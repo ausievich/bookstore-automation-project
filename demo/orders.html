@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>My Orders — Online Bookstore</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <header>
+    <h1>My Orders</h1>
+    <nav><a href="catalog.html" data-testid="nav-catalog">Catalog</a></nav>
+  </header>
+  <main>
+    <div class="card">
+      <ul class="book-list" data-testid="orders-list"></ul>
+    </div>
+  </main>
+  <script src="js/app.js"></script>
+  <script>
+    BookstoreApp.requireAuth();
+    (async () => {
+      const data = await BookstoreApp.api('/api/orders');
+      const list = document.querySelector('[data-testid="orders-list"]');
+      data.items.forEach((order) => {
+        const li = document.createElement('li');
+        li.dataset.testid = `order-${order.id}`;
+        li.textContent = `${order.id} — $${order.total.toFixed(2)} — ${order.status}`;
+        list.appendChild(li);
+      });
+    })();
+  </script>
+</body>
+</html>

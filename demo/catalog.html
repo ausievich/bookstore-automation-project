@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Catalog — Online Bookstore</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <header>
+    <h1 data-testid="dashboard-heading">Book Catalog</h1>
+    <nav>
+      <a href="catalog.html" data-testid="nav-catalog">Catalog</a>
+      <a href="cart.html" data-testid="nav-cart">Cart (<span data-testid="cart-counter">0</span>)</a>
+      <a href="orders.html" data-testid="nav-orders">My Orders</a>
+    </nav>
+  </header>
+  <main>
+    <div class="card">
+      <form id="search-form" style="display:flex;flex-wrap:wrap;gap:1rem;align-items:flex-end">
+        <div>
+          <label for="search">Search</label>
+          <input id="search" data-testid="search-input" placeholder="Title or author" />
+        </div>
+        <div>
+          <label for="category">Category</label>
+          <select id="category" data-testid="category-filter">
+            <option value="">All</option>
+            <option value="Fiction">Fiction</option>
+            <option value="Technology">Technology</option>
+            <option value="Science">Science</option>
+            <option value="History">History</option>
+          </select>
+        </div>
+        <div>
+          <label for="sort">Sort by price</label>
+          <select id="sort" data-testid="sort-select">
+            <option value="">Default</option>
+            <option value="price_asc">Price: Low to High</option>
+            <option value="price_desc">Price: High to Low</option>
+          </select>
+        </div>
+        <button type="submit" data-testid="search-submit">Apply</button>
+      </form>
+      <p class="hidden" data-testid="no-results-message">No books found matching your criteria.</p>
+      <ul class="book-list" data-testid="book-list"></ul>
+    </div>
+  </main>
+  <script src="js/app.js"></script>
+  <script>
+    BookstoreApp.requireAuth();
+
+    async function loadBooks() {
+      const search = document.getElementById('search').value.trim();
+      const category = document.getElementById('category').value;
+      const sort = document.getElementById('sort').value;
+      const params = new URLSearchParams();
+      if (search) params.set('search', search);
+      if (category) params.set('category', category);
+      if (sort) params.set('sort', sort);
+
+      const data = await BookstoreApp.api(`/api/books?${params}`);
+      const list = document.querySelector('[data-testid="book-list"]');
+      const empty = document.querySelector('[data-testid="no-results-message"]');
+      list.innerHTML = '';
+
+      if (!data.items.length) {
+        empty.classList.remove('hidden');
+        return;
+      }
+      empty.classList.add('hidden');
+
+      data.items.forEach((book) => {
+        const li = document.createElement('li');
+        li.dataset.testid = `book-item-${book.id}`;
+        li.innerHTML = `
+          <span><strong>${book.title}</strong> — ${book.author} ($${book.price.toFixed(2)}) [${book.category}]</span>
+          <button type="button" data-testid="add-to-cart-${book.id}" ${book.stock === 0 ? 'disabled' : ''}>Add to cart</button>
+        `;
+        li.querySelector('button')?.addEventListener('click', async () => {
+          await BookstoreApp.api('/api/cart/items', {
+            method: 'POST',
+            body: JSON.stringify({ bookId: book.id, quantity: 1 }),
+          });
+          await BookstoreApp.refreshCartCounter();
+        });
+        list.appendChild(li);
+      });
+    }
+
+    document.getElementById('search-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      loadBooks();
+    });
+
+    BookstoreApp.refreshCartCounter();
+    loadBooks();
+  </script>
+</body>
+</html>

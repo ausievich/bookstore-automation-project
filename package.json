@@ -1,0 +1,33 @@
+{
+  "name": "bookstore-automation-project",
+  "version": "1.0.0",
+  "description": "Playwright + TypeScript automation for mock Online Bookstore",
+  "private": true,
+  "scripts": {
+    "server": "ts-node mock-server/server.ts",
+    "test": "playwright test",
+    "test:ui": "playwright test automation/src/test/automated-testcases/ui",
+    "test:api": "playwright test automation/src/test/automated-testcases/api",
+    "lint": "eslint \"automation/**/*.ts\" \"mock-server/**/*.ts\"",
+    "allure:generate": "allure generate allure-results -o allure-report --clean",
+    "allure:open": "allure open allure-report"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.28.0",
+    "@playwright/test": "^1.52.0",
+    "@types/cors": "^2.8.18",
+    "@types/express": "^5.0.2",
+    "@types/node": "^22.15.21",
+    "allure-commandline": "^2.34.0",
+    "allure-playwright": "^3.2.2",
+    "axios": "^1.9.0",
+    "cors": "^2.8.5",
+    "eslint": "^9.28.0",
+    "eslint-plugin-playwright": "^2.2.0",
+    "express": "^5.1.0",
+    "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
+    "typescript": "^5.8.3",
+    "typescript-eslint": "^8.33.0"
+  }
+}
