@@ -103,15 +103,17 @@ flowchart LR
 
 Workflow: `.github/workflows/ci.yml` (push/PR to `main`).
 
-Jobs (GitHub Actions does not have GitLab-style stages; order is via `needs:`):
+Jobs (order via `needs:`; each job is a fresh VM — reuse is via npm/Playwright caches, not shared disks):
 
 | Job | What it runs |
 |-----|----------------|
-| `typecheck` | `npm run typecheck` |
-| `lint` | `npm run lint` |
-| `test` | `npm test` (after typecheck + lint pass) |
+| `quality` | `typecheck` + `lint` (one `npm ci`) |
+| `test` | `npm test` with Playwright (cached browsers) |
+| `allure-report` | `npm run allure:generate` → artifact `allure-report` |
 
-`typecheck` and `lint` run in parallel; `test` starts only when both succeed.
+Shared setup: `.github/actions/setup-node-project` (`npm ci` + optional Playwright install with cache).
+
+Download the HTML report from the **allure-report** artifact on a workflow run (Actions → run → Artifacts).
 
 There is no external host in CI. Playwright starts the mock app on the runner via `webServer` in `playwright.config.ts`:
 
