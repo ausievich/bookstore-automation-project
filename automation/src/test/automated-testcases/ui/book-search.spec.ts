@@ -3,44 +3,70 @@
  * Feature: Book Search & Filtering
  * Owner: bookstore-qa
  */
-import { test, expect } from '@automation/test/test-base/fixtures';
-import { LoginSteps } from '@automation/main/ui/steps/login.steps';
+import { test } from '@automation/test/test-base/fixtures';
+import { loginAsBookstoreUser } from '@automation/test/test-base/ui-login';
 import { CatalogSteps } from '@automation/main/ui/steps/catalog.steps';
-import { CatalogPage } from '@automation/main/ui/pages/catalog.page';
-import { TestUsers } from '@automation/main/common/constants/credentials';
 import { Owner, allureMetadata } from '@automation/main/common/annotations';
 
 test.describe('Book Search & Filtering', () => {
   test.beforeEach(async ({ page }) => {
     await allureMetadata({ layer: 'UI', owner: Owner.Bookstore });
-    const login = new LoginSteps(page);
-    await login.loginAsValidUser(TestUsers.valid.email, TestUsers.valid.password);
+    await loginAsBookstoreUser(page);
   });
 
   test('@TmsLink:C2001 search by title shows matching books', async ({ page }) => {
-    const steps = new CatalogSteps(page);
-    await steps.searchByTitle('Dune');
-    await steps.expectBookVisible('Dune');
+    const catalog = new CatalogSteps(page);
+
+    await test.step('Open catalog', async () => {
+      await catalog.openCatalog();
+    });
+    await test.step('Search for "Dune"', async () => {
+      await catalog.search('Dune');
+    });
+    await test.step('Verify search results', async () => {
+      await catalog.expectBookVisible('Dune');
+    });
   });
 
   test('@TmsLink:C2002 filter by category', async ({ page }) => {
-    const catalog = new CatalogPage(page);
-    await catalog.open();
-    await catalog.filterByCategory('Technology');
-    await expect(catalog.getBookItems().first()).toContainText('Technology');
+    const catalog = new CatalogSteps(page);
+
+    await test.step('Open catalog', async () => {
+      await catalog.openCatalog();
+    });
+    await test.step('Filter by category "Technology"', async () => {
+      await catalog.filterByCategory('Technology');
+    });
+    await test.step('Verify first book contains "Technology"', async () => {
+      await catalog.expectFirstBookContains('Technology');
+    });
   });
 
   test('@TmsLink:C2003 sort by price ascending', async ({ page }) => {
-    const catalog = new CatalogPage(page);
-    await catalog.open();
-    await catalog.sortByPrice('price_asc');
-    const first = catalog.getBookItems().first();
-    await expect(first).toContainText('$');
+    const catalog = new CatalogSteps(page);
+
+    await test.step('Open catalog', async () => {
+      await catalog.openCatalog();
+    });
+    await test.step('Sort books by price ascending', async () => {
+      await catalog.sortByPrice('price_asc');
+    });
+    await test.step('Verify first book displays a price', async () => {
+      await catalog.expectFirstBookShowsPrice();
+    });
   });
 
   test('@TmsLink:C2004 no results message', async ({ page }) => {
-    const steps = new CatalogSteps(page);
-    await steps.searchByTitle('zzzz-nonexistent-title');
-    await steps.expectNoResults();
+    const catalog = new CatalogSteps(page);
+
+    await test.step('Open catalog', async () => {
+      await catalog.openCatalog();
+    });
+    await test.step('Search for nonexistent title', async () => {
+      await catalog.search('zzzz-nonexistent-title');
+    });
+    await test.step('Verify no results message', async () => {
+      await catalog.expectNoResults();
+    });
   });
 });

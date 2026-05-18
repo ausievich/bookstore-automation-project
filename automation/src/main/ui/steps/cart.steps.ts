@@ -9,15 +9,11 @@ export class CartSteps {
   }
 
   async openCart(): Promise<void> {
-    await testStep('Open cart', () => this.cartPage.open());
+    await this.cartPage.open();
   }
 
-  async expectItemCount(count: number): Promise<void> {
-    await expect(this.cartPage.getItems()).toHaveCount(count);
-  }
-
-  async expectEmptyCart(): Promise<void> {
-    await expect(this.cartPage.getEmptyMessage()).toBeVisible();
+  async goToCheckout(): Promise<void> {
+    await this.cartPage.goToCheckout();
   }
 
   async removeItem(bookId: string): Promise<void> {
@@ -28,12 +24,15 @@ export class CartSteps {
     await this.cartPage.updateQuantity(bookId, qty);
   }
 
+  async expectItemCount(count: number): Promise<void> {
+    await expect(this.cartPage.getItems()).toHaveCount(count);
+  }
+
+  async expectEmptyCart(): Promise<void> {
+    await expect(this.cartPage.getEmptyMessage()).toBeVisible();
+  }
+
   async expectSubtotalContains(amount: string): Promise<void> {
     await expect(this.cartPage.getSubtotal()).toContainText(amount);
   }
-}
-
-async function testStep<T>(title: string, body: () => Promise<T>): Promise<T> {
-  const { test } = await import('@playwright/test');
-  return test.step(title, body);
 }

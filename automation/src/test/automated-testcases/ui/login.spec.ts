@@ -16,19 +16,46 @@ test.describe('User Login', () => {
 
   test('@TmsLink:C1001 valid login shows catalog dashboard', async ({ page }) => {
     const steps = new LoginSteps(page);
-    await steps.loginAsValidUser(TestUsers.valid.email, TestUsers.valid.password);
-    await steps.expectDashboardVisible();
+
+    await test.step('Open login page', async () => {
+      await steps.openLogin();
+    });
+    await test.step('Submit valid credentials', async () => {
+      await steps.submitCredentials(TestUsers.valid.email, TestUsers.valid.password);
+    });
+    await test.step('Wait for catalog redirect', async () => {
+      await steps.waitForCatalogRedirect();
+    });
+    await test.step('Verify catalog dashboard', async () => {
+      await steps.expectDashboardVisible();
+    });
   });
 
   test('@TmsLink:C1002 invalid password shows error', async ({ page }) => {
     const steps = new LoginSteps(page);
-    await steps.loginAs(TestUsers.valid.email, TestUsers.invalidPassword.password);
-    await steps.expectLoginError();
+
+    await test.step('Open login page', async () => {
+      await steps.openLogin();
+    });
+    await test.step('Submit invalid credentials', async () => {
+      await steps.submitCredentials(TestUsers.valid.email, TestUsers.invalidPassword.password);
+    });
+    await test.step('Verify login error', async () => {
+      await steps.expectLoginError();
+    });
   });
 
   test('@TmsLink:C1003 empty fields show validation messages', async ({ page }) => {
     const steps = new LoginSteps(page);
-    await steps.submitEmptyLogin();
-    await steps.expectValidationMessages();
+
+    await test.step('Open login page', async () => {
+      await steps.openLogin();
+    });
+    await test.step('Submit empty login form', async () => {
+      await steps.submitEmptyForm();
+    });
+    await test.step('Verify validation messages', async () => {
+      await steps.expectValidationMessages();
+    });
   });
 });
