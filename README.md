@@ -110,10 +110,17 @@ Jobs (order via `needs:`; each job is a fresh VM — reuse is via npm/Playwright
 | `quality` | `typecheck` + `lint` (one `npm ci`) |
 | `test` | `npm test` with Playwright (cached browsers) |
 | `allure-report` | `npm run allure:generate` → artifact `allure-report` |
+| `deploy-allure` | publish report to GitHub Pages (push to `main` only) |
 
 Shared setup: `.github/actions/setup-node-project` (`npm ci` + optional Playwright install with cache).
 
-Download the HTML report from the **allure-report** artifact on a workflow run (Actions → run → Artifacts).
+**Live report (after push to `main`):** https://ausievich.github.io/bookstore-automation-project/
+
+One-time repo setting: **Settings → Pages → Build and deployment → Source: GitHub Actions**.
+
+Do not open `index.html` from Downloads via `file://` — the UI shows `500 Failed to fetch`. Use the Pages link above, or locally: `npm run allure:open` / `npx serve allure-report`.
+
+Fallback: download the **allure-report** artifact (Actions → run → Artifacts) and run `npx serve allure-report` before opening in the browser.
 
 There is no external host in CI. Playwright starts the mock app on the runner via `webServer` in `playwright.config.ts`:
 
