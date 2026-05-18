@@ -103,6 +103,16 @@ flowchart LR
 
 Workflow: `.github/workflows/ci.yml` (push/PR to `main`).
 
+Jobs (GitHub Actions does not have GitLab-style stages; order is via `needs:`):
+
+| Job | What it runs |
+|-----|----------------|
+| `typecheck` | `npm run typecheck` |
+| `lint` | `npm run lint` |
+| `test` | `npm test` (after typecheck + lint pass) |
+
+`typecheck` and `lint` run in parallel; `test` starts only when both succeed.
+
 There is no external host in CI. Playwright starts the mock app on the runner via `webServer` in `playwright.config.ts`:
 
 - `npm run server` → Express + demo UI on `http://localhost:3000`
