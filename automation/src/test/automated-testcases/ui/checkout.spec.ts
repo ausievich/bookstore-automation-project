@@ -16,9 +16,11 @@ test.describe('Checkout Flow', () => {
     await loginAsBookstoreUser(page);
 
     const catalog = new CatalogSteps(page);
+
     await test.step('Open catalog', async () => {
       await catalog.openCatalog();
     });
+
     await test.step('Add book b3 to cart', async () => {
       await catalog.addBook('b3');
     });
@@ -32,27 +34,35 @@ test.describe('Checkout Flow', () => {
     await test.step('Open cart', async () => {
       await cart.openCart();
     });
+
     await test.step('Proceed to checkout', async () => {
       await cart.goToCheckout();
     });
+
     await test.step('Fill shipping and continue to payment', async () => {
       await checkout.fillShippingAndContinueToPayment();
     });
+
     await test.step('Fill payment and continue to review', async () => {
       await checkout.fillPaymentAndContinueToReview();
     });
+
     await test.step('Place order', async () => {
       await checkout.placeOrder();
     });
+
     await test.step('Verify order success page', async () => {
       await checkout.expectOrderSuccess();
     });
+
     await test.step('Read order number', async () => {
       orderId = await checkout.getOrderNumber();
     });
+
     await test.step('Open my orders list', async () => {
       await checkout.openOrdersList();
     });
+
     await test.step(`Verify order ${orderId} in list`, async () => {
       await checkout.expectOrderInList(orderId);
     });

@@ -11,6 +11,10 @@ module.exports = tseslint.config(
     rules: {
       ...playwright.configs['flat/recommended'].rules,
       '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+      'playwright/expect-expect': [
+        'warn',
+        { assertFunctionPatterns: ['^expect'] },
+      ],
     },
   },
   {

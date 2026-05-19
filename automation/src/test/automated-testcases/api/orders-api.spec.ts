@@ -17,46 +17,66 @@ const checkoutPayload: CreateOrderRequest = {
 test.describe('Orders API', () => {
   test.beforeEach(async ({ cartApi, authToken }) => {
     await allureMetadata({ layer: 'API', owner: Owner.Bookstore });
+
     await test.step('Verify auth token is present', async () => {
       expect(authToken).toBeTruthy();
     });
+
     await addBookToCartViaApi(cartApi, 'b3', 1);
   });
 
-  test('@TmsLink:C7001 place order and get by id', async ({ ordersApi }) => {
-    let created: Awaited<ReturnType<OrdersController['create']>>;
+  test('@TmsLink:C7001 POST /api/orders places order from cart', async ({ ordersApi }) => {
+    let response: Awaited<ReturnType<OrdersController['create']>>;
+
+    await test.step('POST /api/orders', async () => {
+      response = await ordersApi.create(checkoutPayload);
+    });
+
+    await test.step('Verify order created response', async () => {
+      expect(response.status).toBe(201);
+      expect(response.data).toMatchObject({ id: expect.any(String), status: 'confirmed' });
+    });
+  });
+
+  test('@TmsLink:C7002 GET /api/orders/:id returns order details', async ({ ordersApi }) => {
     let orderId = '';
-    let order: Awaited<ReturnType<OrdersController['getById']>>;
+    let created: Awaited<ReturnType<OrdersController['create']>>;
+    let response: Awaited<ReturnType<OrdersController['getById']>>;
 
     await test.step('POST /api/orders', async () => {
       created = await ordersApi.create(checkoutPayload);
     });
-    await test.step('Verify order created response', async () => {
+
+    await test.step('Read created order id', async () => {
       expect(created.status).toBe(201);
-      expect(created.data).toMatchObject({ id: expect.any(String) });
       orderId = (created.data as OrderDto).id;
     });
+
     await test.step('GET /api/orders/:id', async () => {
-      order = await ordersApi.getById(orderId);
+      response = await ordersApi.getById(orderId);
     });
-    await test.step('Verify order is confirmed', async () => {
-      expect(order.status).toBe(200);
-      expect(order.data).toMatchObject({ status: 'confirmed' });
+
+    await test.step('Verify order details response', async () => {
+      expect(response.status).toBe(200);
+      expect(response.data).toMatchObject({ id: orderId, status: 'confirmed' });
     });
   });
 
-  test('@TmsLink:C7002 list orders with pagination', async ({ ordersApi }) => {
-    let list: Awaited<ReturnType<OrdersController['list']>>;
+  test('@TmsLink:C7003 GET /api/orders returns paginated list', async ({ ordersApi }) => {
+    let response: Awaited<ReturnType<OrdersController['list']>>;
 
     await test.step('POST /api/orders', async () => {
       await ordersApi.create(checkoutPayload);
     });
+
     await test.step('GET /api/orders with pagination', async () => {
-      list = await ordersApi.list(1, 5);
+      response = await ordersApi.list(1, 5);
     });
+
     await test.step('Verify orders list response', async () => {
-      expect(list.status).toBe(200);
-      expect(list.data.items.length).toBeGreaterThan(0);
+      expect(response.status).toBe(200);
+      expect(response.data.items.length).toBeGreaterThan(0);
+      expect(response.data.total).toBeGreaterThan(0);
     });
   });
 });

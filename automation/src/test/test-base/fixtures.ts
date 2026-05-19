@@ -8,6 +8,7 @@ import { AuthController } from '@automation/main/api/controllers/auth.controller
 
 type ApiFixtures = {
   httpClient: HttpClient;
+  apiReset: void;
   authApi: AuthController;
   booksApi: BooksController;
   cartApi: CartController;
@@ -27,6 +28,14 @@ export const test = base.extend<ApiFixtures>({
     await use(client);
   },
 
+  apiReset: [
+    async ({ httpClient }, use) => {
+      await httpClient.request({ method: 'POST', url: '/api/test/reset' });
+      await use();
+    },
+    { auto: true },
+  ],
+
   authApi: async ({ httpClient }, use) => {
     await use(new AuthController(httpClient));
   },
@@ -43,7 +52,8 @@ export const test = base.extend<ApiFixtures>({
     await use(new OrdersController(httpClient));
   },
 
-  authToken: async ({ httpClient }, use) => {
+  authToken: async ({ httpClient, apiReset }, use) => {
+    void apiReset;
     const token = await new AuthFlow(httpClient).loginAsDefaultUser();
     httpClient.setAuthToken(token);
     await use(token);

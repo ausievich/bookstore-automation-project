@@ -20,12 +20,15 @@ test.describe('User Login', () => {
     await test.step('Open login page', async () => {
       await steps.openLogin();
     });
+
     await test.step('Submit valid credentials', async () => {
       await steps.submitCredentials(TestUsers.valid.email, TestUsers.valid.password);
     });
+
     await test.step('Wait for catalog redirect', async () => {
       await steps.waitForCatalogRedirect();
     });
+
     await test.step('Verify catalog dashboard', async () => {
       await steps.expectDashboardVisible();
     });
@@ -37,9 +40,11 @@ test.describe('User Login', () => {
     await test.step('Open login page', async () => {
       await steps.openLogin();
     });
+
     await test.step('Submit invalid credentials', async () => {
       await steps.submitCredentials(TestUsers.valid.email, TestUsers.invalidPassword.password);
     });
+
     await test.step('Verify login error', async () => {
       await steps.expectLoginError();
     });
@@ -51,9 +56,11 @@ test.describe('User Login', () => {
     await test.step('Open login page', async () => {
       await steps.openLogin();
     });
+
     await test.step('Submit empty login form', async () => {
       await steps.submitEmptyForm();
     });
+
     await test.step('Verify validation messages', async () => {
       await steps.expectValidationMessages();
     });
