@@ -10,7 +10,8 @@ function run(command, args) {
 
 rmSync('allure-results', { recursive: true, force: true });
 
-const test = spawnSync('npx', ['playwright', 'test'], { stdio: 'inherit', shell: true });
+// npm run adds node_modules/.bin to PATH (fixes Windows "playwright is not recognized")
+const test = spawnSync('npm', ['run', 'test'], { stdio: 'inherit', shell: true });
 const exitCode = test.status ?? 1;
 
 run('npm', ['run', 'allure:generate']);

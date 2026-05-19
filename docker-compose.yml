@@ -1,4 +1,4 @@
-# Linux environment aligned with CI (Playwright jammy image) for stable visual baselines.
+# Linux environment for local runs and CI (Playwright jammy image) — stable visual baselines.
 services:
   bookstore:
     image: node:22-bookworm-slim

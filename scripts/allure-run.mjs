@@ -1,6 +1,6 @@
 import { spawnSync } from 'node:child_process';
 import { existsSync, readdirSync } from 'node:fs';
-import { join } from 'node:path';
+import { join, resolve } from 'node:path';
 
 function isValidJavaHome(home) {
   if (!home || home.includes('1>&2')) return false;
@@ -39,12 +39,22 @@ if (!javaHome) {
   process.exit(1);
 }
 
+const allureBin = resolve(
+  process.cwd(),
+  'node_modules',
+  '.bin',
+  process.platform === 'win32' ? 'allure.cmd' : 'allure',
+);
+if (!existsSync(allureBin)) {
+  console.error('allure-commandline not found. Run: npm ci');
+  process.exit(1);
+}
+
 const env = { ...process.env, JAVA_HOME: javaHome };
-const allureArgs = ['allure', ...process.argv.slice(2)];
-const result = spawnSync('npx', allureArgs, {
+const result = spawnSync(allureBin, process.argv.slice(2), {
   env,
   stdio: 'inherit',
-  shell: true,
+  shell: process.platform === 'win32',
 });
 
 process.exit(result.status ?? 1);

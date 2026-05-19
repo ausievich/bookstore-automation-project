@@ -106,7 +106,7 @@ Compose starts `bookstore` (mock server) and `playwright` (`mcr.microsoft.com/pl
 | `workers > 1` in one run | **No** — races on reset and in-memory store | Single report |
 | **CI shards** (2 jobs, 1 worker each) | **Yes** — separate server per job | Merge `allure-results-*` artifacts before generate |
 
-`playwright.config.ts` keeps `workers: 1`. CI uses `--shard=1/2` and `--shard=2/2` in parallel jobs.
+`playwright.config.ts` keeps `workers: 1`. CI runs the same `npm run docker:test` flow as locally, with `--shard=1/2` and `--shard=2/2` in parallel jobs (one mock-server container per shard).
 
 ## Architecture
 
@@ -132,7 +132,7 @@ flowchart LR
 
 ## CI
 
-On every push and PR to `main`: **Quality Gates** (typecheck, lint) → **Playwright Tests** → **Allure Report**. Workflow: `.github/workflows/ci.yml`.
+On every push and PR to `main`: **Quality Gates** (typecheck, lint on the runner) → **Playwright Tests in Docker** (`docker compose`, Playwright jammy image, same as `npm run docker:test`) → **Allure Report**. Workflow: `.github/workflows/ci.yml`.
 
 **Allure Report:** https://ausievich.github.io/bookstore-automation-project/
 
