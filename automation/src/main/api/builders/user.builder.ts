@@ -1,7 +1,4 @@
-export interface LoginRequest {
-  email: string;
-  password: string;
-}
+import { LoginRequest } from '@automation/main/api/models/auth.models';
 
 export class UserBuilder {
   private data: LoginRequest = {

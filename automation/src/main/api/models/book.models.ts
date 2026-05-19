@@ -24,7 +24,3 @@ export interface CreateBookRequest {
   price: number;
   stock: number;
 }
-
-export interface ApiErrorDto {
-  error: string;
-}

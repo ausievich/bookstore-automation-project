@@ -1,5 +1,6 @@
 import { HttpClient } from '@automation/main/api/clients/http-client';
-import { CreateBookRequest, BookDto, BooksPageDto, ApiErrorDto } from '@automation/main/api/models/book.models';
+import { ApiErrorDto } from '@automation/main/api/models/api-error.models';
+import { BookDto, BooksPageDto, CreateBookRequest } from '@automation/main/api/models/book.models';
 
 export class BooksController {
   constructor(private readonly http: HttpClient) {}

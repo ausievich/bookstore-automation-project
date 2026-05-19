@@ -5,10 +5,11 @@
  */
 import { test, expect } from '@automation/test/test-base/fixtures';
 import { addBookToCartViaApi } from '@automation/test/test-base/api-cart-setup';
-import { OrderDto, OrdersController } from '@automation/main/api/controllers/orders.controller';
+import { OrdersController } from '@automation/main/api/controllers/orders.controller';
+import { CreateOrderRequest, OrderDto } from '@automation/main/api/models/order.models';
 import { Owner, allureMetadata } from '@automation/main/common/annotations';
 
-const checkoutPayload = {
+const checkoutPayload: CreateOrderRequest = {
   shipping: { name: 'API User', address: '1 Test Rd', city: 'Testville', zip: '00000' },
   payment: { cardLast4: '9999' },
 };

@@ -1,17 +1,6 @@
 import { HttpClient } from '@automation/main/api/clients/http-client';
-
-export interface CartItemDto {
-  bookId: string;
-  quantity: number;
-  title: string;
-  price: number;
-  lineTotal: number;
-}
-
-export interface CartDto {
-  items: CartItemDto[];
-  subtotal: number;
-}
+import { ApiErrorDto } from '@automation/main/api/models/api-error.models';
+import { CartDto } from '@automation/main/api/models/cart.models';
 
 export class CartController {
   constructor(private readonly http: HttpClient) {}
@@ -21,7 +10,7 @@ export class CartController {
   }
 
   addItem(bookId: string, quantity: number) {
-    return this.http.request<CartDto | { error: string }>({
+    return this.http.request<CartDto | ApiErrorDto>({
       method: 'POST',
       url: '/api/cart/items',
       data: { bookId, quantity },
@@ -29,7 +18,7 @@ export class CartController {
   }
 
   updateItem(bookId: string, quantity: number) {
-    return this.http.request<CartDto | { error: string }>({
+    return this.http.request<CartDto | ApiErrorDto>({
       method: 'PATCH',
       url: `/api/cart/items/${bookId}`,
       data: { quantity },

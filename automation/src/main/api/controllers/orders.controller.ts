@@ -1,28 +1,12 @@
 import { HttpClient } from '@automation/main/api/clients/http-client';
-
-export interface OrderDto {
-  id: string;
-  userId: string;
-  status: string;
-  total: number;
-  items: Array<{ bookId: string; title: string; quantity: number; unitPrice: number }>;
-}
-
-export interface OrdersPageDto {
-  items: OrderDto[];
-  total: number;
-  page: number;
-  limit: number;
-}
+import { ApiErrorDto } from '@automation/main/api/models/api-error.models';
+import { CreateOrderRequest, OrderDto, OrdersPageDto } from '@automation/main/api/models/order.models';
 
 export class OrdersController {
   constructor(private readonly http: HttpClient) {}
 
-  create(payload: {
-    shipping: { name: string; address: string; city: string; zip: string };
-    payment: { cardLast4: string };
-  }) {
-    return this.http.request<OrderDto | { error: string }>({
+  create(payload: CreateOrderRequest) {
+    return this.http.request<OrderDto | ApiErrorDto>({
       method: 'POST',
       url: '/api/orders',
       data: payload,
@@ -30,7 +14,7 @@ export class OrdersController {
   }
 
   getById(id: string) {
-    return this.http.request<OrderDto | { error: string }>({ method: 'GET', url: `/api/orders/${id}` });
+    return this.http.request<OrderDto | ApiErrorDto>({ method: 'GET', url: `/api/orders/${id}` });
   }
 
   list(page = 1, limit = 10) {
