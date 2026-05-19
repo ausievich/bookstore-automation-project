@@ -1,10 +1,11 @@
-import { test as base } from '@playwright/test';
+import { Page, test as base } from '@playwright/test';
 import { HttpClient } from '@automation/main/api/clients/http-client';
 import { AuthFlow } from '@automation/main/api/flows/auth.flow';
 import { BooksController } from '@automation/main/api/controllers/books.controller';
 import { CartController } from '@automation/main/api/controllers/cart.controller';
 import { OrdersController } from '@automation/main/api/controllers/orders.controller';
 import { AuthController } from '@automation/main/api/controllers/auth.controller';
+import { loginAsBookstoreUser } from '@automation/test/test-base/ui-login';
 
 type ApiFixtures = {
   httpClient: HttpClient;
@@ -16,7 +17,12 @@ type ApiFixtures = {
   authToken: string;
 };
 
-export const test = base.extend<ApiFixtures>({
+type UiFixtures = {
+  /** Logged-in browser session on the catalog page (opt-in per test). */
+  catalogPage: Page;
+};
+
+export const test = base.extend<ApiFixtures & UiFixtures>({
   page: async ({ page }, use) => {
     await page.request.post('/api/test/reset');
     await page.goto('/login.html', { waitUntil: 'domcontentloaded' });
@@ -58,6 +64,11 @@ export const test = base.extend<ApiFixtures>({
     httpClient.setAuthToken(token);
     await use(token);
     httpClient.setAuthToken(null);
+  },
+
+  catalogPage: async ({ page }, use) => {
+    await loginAsBookstoreUser(page);
+    await use(page);
   },
 });
 

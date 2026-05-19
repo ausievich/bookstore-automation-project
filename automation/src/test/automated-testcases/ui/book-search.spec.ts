@@ -5,22 +5,16 @@
  * Test Description: Search, category filter, price sort, and empty results
  */
 import { test } from '@automation/test/test-base/fixtures';
-import { loginAsBookstoreUser } from '@automation/test/test-base/ui-login';
 import { CatalogSteps } from '@automation/main/ui/steps/catalog.steps';
 import { Owner, allureMetadata } from '@automation/main/common/annotations';
 
 test.describe('Book Search & Filtering', () => {
-  test.beforeEach(async ({ page }) => {
+  test.beforeEach(async () => {
     await allureMetadata({ layer: 'UI', owner: Owner.Bookstore });
-    await loginAsBookstoreUser(page);
   });
 
-  test('@TmsLink:C2001 search by title shows matching books', async ({ page }) => {
-    const catalog = new CatalogSteps(page);
-
-    await test.step('Open catalog', async () => {
-      await catalog.openCatalog();
-    });
+  test('@TmsLink:C2001 search by title shows matching books', async ({ catalogPage }) => {
+    const catalog = new CatalogSteps(catalogPage);
 
     await test.step('Search for "Dune"', async () => {
       await catalog.search('Dune');
@@ -31,12 +25,8 @@ test.describe('Book Search & Filtering', () => {
     });
   });
 
-  test('@TmsLink:C2002 filter by category', async ({ page }) => {
-    const catalog = new CatalogSteps(page);
-
-    await test.step('Open catalog', async () => {
-      await catalog.openCatalog();
-    });
+  test('@TmsLink:C2002 filter by category', async ({ catalogPage }) => {
+    const catalog = new CatalogSteps(catalogPage);
 
     await test.step('Filter by category "Technology"', async () => {
       await catalog.filterByCategory('Technology');
@@ -47,12 +37,8 @@ test.describe('Book Search & Filtering', () => {
     });
   });
 
-  test('@TmsLink:C2003 sort by price ascending', async ({ page }) => {
-    const catalog = new CatalogSteps(page);
-
-    await test.step('Open catalog', async () => {
-      await catalog.openCatalog();
-    });
+  test('@TmsLink:C2003 sort by price ascending', async ({ catalogPage }) => {
+    const catalog = new CatalogSteps(catalogPage);
 
     await test.step('Sort books by price ascending', async () => {
       await catalog.sortByPrice('price_asc');
@@ -63,12 +49,8 @@ test.describe('Book Search & Filtering', () => {
     });
   });
 
-  test('@TmsLink:C2005 sort by price descending', async ({ page }) => {
-    const catalog = new CatalogSteps(page);
-
-    await test.step('Open catalog', async () => {
-      await catalog.openCatalog();
-    });
+  test('@TmsLink:C2005 sort by price descending', async ({ catalogPage }) => {
+    const catalog = new CatalogSteps(catalogPage);
 
     await test.step('Sort books by price descending', async () => {
       await catalog.sortByPrice('price_desc');
@@ -79,12 +61,8 @@ test.describe('Book Search & Filtering', () => {
     });
   });
 
-  test('@TmsLink:C2004 no results message', async ({ page }) => {
-    const catalog = new CatalogSteps(page);
-
-    await test.step('Open catalog', async () => {
-      await catalog.openCatalog();
-    });
+  test('@TmsLink:C2004 no results message', async ({ catalogPage }) => {
+    const catalog = new CatalogSteps(catalogPage);
 
     await test.step('Search for nonexistent title', async () => {
       await catalog.search('zzzz-nonexistent-title');
