@@ -187,6 +187,22 @@ app.get('/api/orders/:id', requireAuth, (req, res) => {
   res.json(order);
 });
 
+app.patch('/api/orders/:id/status', requireAuth, (req, res) => {
+  const userId = (req as Request & { userId: string }).userId;
+  const { status } = req.body as { status?: string };
+  if (status !== 'pending' && status !== 'confirmed' && status !== 'shipped') {
+    res.status(400).json({ error: 'Invalid status' });
+    return;
+  }
+  const result = store.transitionOrderStatus(userId, paramId(req), status);
+  if (!result.ok) {
+    const code = result.error === 'Order not found' ? 404 : 400;
+    res.status(code).json({ error: result.error });
+    return;
+  }
+  res.json(result.order);
+});
+
 if (require.main === module) {
   app.listen(PORT, () => {
      

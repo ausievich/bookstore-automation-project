@@ -54,6 +54,12 @@ const tokens = new Map<string, string>();
 
 let orderCounter = 1000;
 
+const ORDER_STATUS_TRANSITIONS: Record<OrderStatus, OrderStatus[]> = {
+  pending: ['confirmed'],
+  confirmed: ['shipped'],
+  shipped: [],
+};
+
 export const store = {
   reset(): void {
     carts.clear();
@@ -221,12 +227,34 @@ export const store = {
       })),
       shipping,
       payment,
-      status: 'confirmed',
+      status: 'pending',
       total: this.cartSubtotal(userId),
       createdAt: new Date().toISOString(),
     };
     orders.push(order);
     this.setCart(userId, []);
+    return { ok: true, order };
+  },
+
+  transitionOrderStatus(
+    userId: string,
+    orderId: string,
+    status: OrderStatus,
+  ): { ok: true; order: Order } | { ok: false; error: string } {
+    const order = this.getOrder(orderId, userId);
+    if (!order) {
+      return { ok: false, error: 'Order not found' };
+    }
+
+    const allowed = ORDER_STATUS_TRANSITIONS[order.status];
+    if (!allowed.includes(status)) {
+      return {
+        ok: false,
+        error: `Cannot transition from ${order.status} to ${status}`,
+      };
+    }
+
+    order.status = status;
     return { ok: true, order };
   },
 

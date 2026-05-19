@@ -23,6 +23,10 @@ export interface CreateOrderRequest {
   payment: PaymentDetailsDto;
 }
 
+export interface UpdateOrderStatusRequest {
+  status: OrderStatus;
+}
+
 export interface OrderDto {
   id: string;
   userId: string;

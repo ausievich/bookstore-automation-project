@@ -32,9 +32,9 @@ test.describe('Orders API', () => {
       response = await ordersApi.create(checkoutPayload);
     });
 
-    await test.step('Verify order created response', async () => {
+    await test.step('Verify order created with pending status', async () => {
       expect(response.status).toBe(201);
-      expect(response.data).toMatchObject({ id: expect.any(String), status: 'confirmed' });
+      expect(response.data).toMatchObject({ id: expect.any(String), status: 'pending' });
     });
   });
 
@@ -58,7 +58,7 @@ test.describe('Orders API', () => {
 
     await test.step('Verify order details response', async () => {
       expect(response.status).toBe(200);
-      expect(response.data).toMatchObject({ id: orderId, status: 'confirmed' });
+      expect(response.data).toMatchObject({ id: orderId, status: 'pending' });
     });
   });
 
@@ -77,6 +77,70 @@ test.describe('Orders API', () => {
       expect(response.status).toBe(200);
       expect(response.data.items.length).toBeGreaterThan(0);
       expect(response.data.total).toBeGreaterThan(0);
+    });
+  });
+
+  test('@TmsLink:C7004 order status transitions pending to confirmed to shipped', async ({ ordersApi }) => {
+    let orderId = '';
+    let created: Awaited<ReturnType<OrdersController['create']>>;
+    let confirmed: Awaited<ReturnType<OrdersController['updateStatus']>>;
+    let shipped: Awaited<ReturnType<OrdersController['updateStatus']>>;
+    let order: Awaited<ReturnType<OrdersController['getById']>>;
+
+    await test.step('POST /api/orders', async () => {
+      created = await ordersApi.create(checkoutPayload);
+    });
+
+    await test.step('Verify new order is pending', async () => {
+      expect(created.status).toBe(201);
+      expect(created.data).toMatchObject({ status: 'pending' });
+      orderId = (created.data as OrderDto).id;
+    });
+
+    await test.step('PATCH /api/orders/:id/status to confirmed', async () => {
+      confirmed = await ordersApi.updateStatus(orderId, 'confirmed');
+    });
+
+    await test.step('Verify order is confirmed', async () => {
+      expect(confirmed.status).toBe(200);
+      expect(confirmed.data).toMatchObject({ id: orderId, status: 'confirmed' });
+    });
+
+    await test.step('PATCH /api/orders/:id/status to shipped', async () => {
+      shipped = await ordersApi.updateStatus(orderId, 'shipped');
+    });
+
+    await test.step('Verify order is shipped', async () => {
+      expect(shipped.status).toBe(200);
+      expect(shipped.data).toMatchObject({ id: orderId, status: 'shipped' });
+    });
+
+    await test.step('GET /api/orders/:id', async () => {
+      order = await ordersApi.getById(orderId);
+    });
+
+    await test.step('Verify final order status is shipped', async () => {
+      expect(order.status).toBe(200);
+      expect(order.data).toMatchObject({ id: orderId, status: 'shipped' });
+    });
+  });
+
+  test('@TmsLink:C7005 invalid status transition returns 400', async ({ ordersApi }) => {
+    let orderId = '';
+    let response: Awaited<ReturnType<OrdersController['updateStatus']>>;
+
+    await test.step('POST /api/orders', async () => {
+      const created = await ordersApi.create(checkoutPayload);
+      orderId = (created.data as OrderDto).id;
+    });
+
+    await test.step('PATCH pending order directly to shipped', async () => {
+      response = await ordersApi.updateStatus(orderId, 'shipped');
+    });
+
+    await test.step('Verify invalid transition is rejected', async () => {
+      expect(response.status).toBe(400);
+      expect(response.data).toMatchObject({ error: expect.stringContaining('Cannot transition') });
     });
   });
 });
