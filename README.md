@@ -19,8 +19,11 @@ Playwright + TypeScript test automation for the **Online Bookstore** mock applic
 ```bash
 npm install
 npx playwright install chromium
-npm test
+npx playwright test
 ```
+
+> After `npm install`, `npx playwright test` uses the CLI from `@playwright/test`.
+> If npx offers to install package `playwright` — dependencies are missing; run `npm install` again.
 
 Recommended for the same environment as CI (including visual baselines):
 
@@ -40,12 +43,12 @@ npm run report
 
 `npm run report` always generates and opens Allure even when tests fail (exit code still reflects the test result).
 
-Or step by step:
+Or step by step (per assignment):
 
 ```bash
-npm test
-npm run allure:generate
-npm run allure:open
+npx playwright test
+npx allure generate allure-results -o allure-report --clean
+npx allure open allure-report
 ```
 
 | Output | Description |

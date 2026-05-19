@@ -46,7 +46,7 @@ const allureBin = resolve(
   process.platform === 'win32' ? 'allure.cmd' : 'allure',
 );
 if (!existsSync(allureBin)) {
-  console.error('allure-commandline not found. Run: npm ci');
+  console.error('allure-commandline not found. Run: npm install');
   process.exit(1);
 }
 
