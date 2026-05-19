@@ -8,7 +8,7 @@
 <body>
   <header><h1>Online Bookstore</h1></header>
   <main>
-    <div class="card" style="max-width:400px;margin:auto">
+    <div class="card" data-testid="login-card" style="max-width:400px;margin:auto">
       <h2 data-testid="login-heading">Sign in</h2>
       <form id="login-form">
         <label for="email">Email</label>
@@ -22,7 +22,7 @@
         <p class="error hidden" data-testid="login-error" role="alert"></p>
         <button type="submit" data-testid="login-submit" style="margin-top:1rem">Sign in</button>
       </form>
-    </main>
+    </div>
   </main>
   <script src="js/app.js"></script>
   <script>

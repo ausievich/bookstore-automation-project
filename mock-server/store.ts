@@ -35,7 +35,7 @@ export interface Order {
   createdAt: string;
 }
 
-const books: Book[] = [
+const SEED_BOOKS: Book[] = [
   { id: 'b1', title: 'Clean Code', author: 'Robert Martin', category: 'Technology', price: 42.99, stock: 10 },
   { id: 'b2', title: 'The Pragmatic Programmer', author: 'Hunt & Thomas', category: 'Technology', price: 39.5, stock: 8 },
   { id: 'b3', title: 'Dune', author: 'Frank Herbert', category: 'Fiction', price: 18.99, stock: 15 },
@@ -43,6 +43,8 @@ const books: Book[] = [
   { id: 'b5', title: 'A Brief History of Time', author: 'Stephen Hawking', category: 'Science', price: 15.75, stock: 6 },
   { id: 'b6', title: 'Neuromancer', author: 'William Gibson', category: 'Fiction', price: 14.25, stock: 0 },
 ];
+
+const books: Book[] = SEED_BOOKS.map((book) => ({ ...book }));
 
 const users: User[] = [
   { id: 'u1', email: 'user@bookstore.test', password: 'password123', name: 'Test User' },
@@ -66,11 +68,8 @@ export const store = {
     orders.length = 0;
     tokens.clear();
     orderCounter = 1000;
-    books.forEach((b) => {
-      delete b.deleted;
-      if (b.id === 'b6') b.stock = 0;
-      else if (b.stock === 0) b.stock = 10;
-    });
+    books.length = 0;
+    books.push(...SEED_BOOKS.map((book) => ({ ...book })));
   },
 
   findUserByEmail(email: string): User | undefined {

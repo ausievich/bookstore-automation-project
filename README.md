@@ -29,6 +29,8 @@ Run tests, generate the report, and open it in the browser:
 npm run report
 ```
 
+`npm run report` always generates and opens Allure even when tests fail (exit code still reflects test result).
+
 Or step by step (e.g. re-open an existing report without re-running tests):
 
 ```bash
@@ -71,10 +73,28 @@ Path alias: `@automation/*` → `automation/src/*`
 
 ## Tests
 
-- **UI** (4 specs): login, search/filter, cart, checkout
+- **UI** (5 specs): login, search/filter, cart, checkout, visual regression
 - **API** (3 specs): books CRUD, cart, orders
 
-Test state is reset via `POST /api/test/reset` before each test.
+Test state is reset via `POST /api/test/reset` before each test (UI via `page` fixture, API via `apiReset` fixture).
+
+### Visual regression
+
+```bash
+npm run test:visual
+npm run test:update-snapshots   # refresh baselines after intentional UI changes
+```
+
+Baselines live next to the spec in `visual-regression.spec.ts-snapshots/`. CI runs on Linux — if local screenshots differ by OS/fonts, update baselines in CI or WSL.
+
+### Parallelism
+
+| Approach | Safe with shared mock-server? | Allure |
+|----------|-------------------------------|--------|
+| `workers > 1` in one run | **No** — races on reset and in-memory store | Single report |
+| **CI shards** (2 jobs, 1 worker each) | **Yes** — separate server per job | Merge `allure-results-*` artifacts before generate |
+
+`playwright.config.ts` keeps `workers: 1`. CI uses `--shard=1/2` and `--shard=2/2` in parallel jobs.
 
 ## Architecture
 
@@ -108,5 +128,5 @@ On every push and PR to `main`: **Quality Gates** (typecheck, lint) → **Playwr
 
 - [x] GitHub Actions CI
 - [ ] Docker Compose
-- [ ] Visual regression
+- [x] Visual regression
 - [ ] TestRail reporter (live integration)

@@ -40,4 +40,8 @@ export class LoginPage {
   getPasswordValidationLocator() {
     return this.page.locator(LoginLocators.passwordValidation);
   }
+
+  getLoginCardLocator() {
+    return this.page.locator(LoginLocators.card);
+  }
 }

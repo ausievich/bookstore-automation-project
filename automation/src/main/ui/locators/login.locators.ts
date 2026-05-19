@@ -6,4 +6,5 @@ export const LoginLocators = {
   emailValidation: '[data-testid="email-validation"]',
   passwordValidation: '[data-testid="password-validation"]',
   heading: '[data-testid="login-heading"]',
+  card: '[data-testid="login-card"]',
 } as const;

@@ -8,11 +8,13 @@
     "test": "playwright test",
     "test:ui": "playwright test automation/src/test/automated-testcases/ui",
     "test:api": "playwright test automation/src/test/automated-testcases/api",
+    "test:visual": "playwright test automation/src/test/automated-testcases/ui/visual-regression.spec.ts",
+    "test:update-snapshots": "playwright test --update-snapshots",
     "lint": "eslint \"automation/**/*.ts\" \"mock-server/**/*.ts\"",
     "typecheck": "tsc --noEmit",
     "allure:generate": "node scripts/allure-run.mjs generate allure-results -o allure-report --clean",
     "allure:open": "node scripts/allure-run.mjs open allure-report",
-    "report": "npm test && npm run allure:generate && npm run allure:open"
+    "report": "node scripts/run-report.mjs"
   },
   "devDependencies": {
     "@eslint/js": "^9.28.0",

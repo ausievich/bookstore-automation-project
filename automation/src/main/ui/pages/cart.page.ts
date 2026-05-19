@@ -1,4 +1,5 @@
 import { Page } from '@playwright/test';
+import { CartLocators } from '@automation/main/ui/locators/cart.locators';
 
 export class CartPage {
   constructor(private readonly page: Page) {}
@@ -8,8 +9,12 @@ export class CartPage {
     return this;
   }
 
+  getSummaryCardLocator() {
+    return this.page.locator(CartLocators.summaryCard);
+  }
+
   async goToCheckout(): Promise<this> {
-    await this.page.locator('[data-testid="checkout-link"]').click();
+    await this.page.locator(CartLocators.checkoutLink).click();
     return this;
   }
 
@@ -29,10 +34,10 @@ export class CartPage {
   }
 
   getEmptyMessage() {
-    return this.page.locator('[data-testid="empty-cart-message"]');
+    return this.page.locator(CartLocators.emptyMessage);
   }
 
   getSubtotal() {
-    return this.page.locator('[data-testid="cart-subtotal"]');
+    return this.page.locator(CartLocators.subtotal);
   }
 }
