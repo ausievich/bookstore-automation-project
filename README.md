@@ -80,12 +80,24 @@ Test state is reset via `POST /api/test/reset` before each test (UI via `page` f
 
 ### Visual regression
 
+Baselines live in `visual-regression.spec.ts-snapshots/`. **Capture them in Docker** (Linux, same as CI) so Windows/macOS local runs do not drift:
+
 ```bash
-npm run test:visual
-npm run test:update-snapshots   # refresh baselines after intentional UI changes
+npm run docker:visual:update   # rewrite PNG baselines from Linux container
+npm run docker:test:visual     # verify visual tests in Docker
+npm run test:visual            # local Playwright (may differ from CI without Docker baselines)
 ```
 
-Baselines live next to the spec in `visual-regression.spec.ts-snapshots/`. CI runs on Linux — if local screenshots differ by OS/fonts, update baselines in CI or WSL.
+Requires [Docker Desktop](https://www.docker.com/products/docker-desktop/) (or Docker Engine + Compose v2).
+
+### Docker (tests in Linux)
+
+```bash
+npm run docker:test              # full suite in container
+npm run docker:visual:update     # refresh screenshot baselines (commit updated PNGs)
+```
+
+Compose starts `bookstore` (mock server) and `playwright` (`mcr.microsoft.com/playwright:v1.60.0-jammy`, aligned with `package-lock.json`). Tests use `BASE_URL=http://bookstore:3000` — no host `webServer` in config.
 
 ### Parallelism
 
@@ -127,6 +139,6 @@ On every push and PR to `main`: **Quality Gates** (typecheck, lint) → **Playwr
 ## Remaining / bonus (optional)
 
 - [x] GitHub Actions CI
-- [ ] Docker Compose
+- [x] Docker Compose
 - [x] Visual regression
 - [ ] TestRail reporter (live integration)

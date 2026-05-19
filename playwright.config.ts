@@ -8,6 +8,7 @@ register({
 });
 
 const baseURL = process.env.BASE_URL ?? 'http://localhost:3000';
+const useExternalServer = process.env.PLAYWRIGHT_EXTERNAL_SERVER === 'true';
 
 export default defineConfig({
   testDir: 'automation/src/test/automated-testcases',
@@ -33,14 +34,18 @@ export default defineConfig({
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
+    ...devices['Desktop Chrome'],
+    viewport: { width: 1280, height: 720 },
   },
-  projects: [
-    { name: 'chromium', use: { ...devices['Desktop Chrome'] } },
-  ],
-  webServer: {
-    command: 'npm run server',
-    url: `${baseURL}/health`,
-    reuseExistingServer: !process.env.CI,
-    timeout: 120_000,
-  },
+  projects: [{ name: 'chromium' }],
+  ...(useExternalServer
+    ? {}
+    : {
+        webServer: {
+          command: 'npm run server',
+          url: `${baseURL}/health`,
+          reuseExistingServer: !process.env.CI,
+          timeout: 120_000,
+        },
+      }),
 });
