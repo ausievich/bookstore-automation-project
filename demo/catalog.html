@@ -71,9 +71,14 @@
 
       data.items.forEach((book) => {
         const li = document.createElement('li');
-        li.dataset.testid = `book-item-${book.id}`;
+        li.setAttribute('data-testid', `book-item-${book.id}`);
         li.innerHTML = `
-          <span><strong>${book.title}</strong> — ${book.author} ($${book.price.toFixed(2)}) [${book.category}]</span>
+          <span>
+            <strong data-testid="book-title">${book.title}</strong>
+            — <span data-testid="book-author">${book.author}</span>
+            <span data-testid="book-price" data-price="${book.price}">$${book.price.toFixed(2)}</span>
+            <span data-testid="book-category">${book.category}</span>
+          </span>
           <button type="button" data-testid="add-to-cart-${book.id}" ${book.stock === 0 ? 'disabled' : ''}>Add to cart</button>
         `;
         li.querySelector('button')?.addEventListener('click', async () => {

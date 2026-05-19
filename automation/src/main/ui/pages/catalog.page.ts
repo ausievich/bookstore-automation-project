@@ -34,7 +34,19 @@ export class CatalogPage {
   }
 
   getBookItems() {
-    return this.page.locator('[data-testid="book-list"] li');
+    return this.page.locator('[data-testid="book-list"] [data-testid^="book-item-"]');
+  }
+
+  getBookTitles() {
+    return this.page.locator('[data-testid="book-list"] [data-testid="book-title"]');
+  }
+
+  getBookCategories() {
+    return this.page.locator('[data-testid="book-list"] [data-testid="book-category"]');
+  }
+
+  getBookPrices() {
+    return this.page.locator('[data-testid="book-list"] [data-testid="book-price"]');
   }
 
   getNoResultsMessage() {

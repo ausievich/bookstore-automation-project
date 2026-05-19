@@ -10,6 +10,7 @@ export class CatalogSteps {
 
   async openCatalog(): Promise<void> {
     await this.catalogPage.open();
+    await expect(this.catalogPage.getBookItems()).not.toHaveCount(0);
   }
 
   async search(title: string): Promise<void> {
@@ -33,20 +34,49 @@ export class CatalogSteps {
     await this.catalogPage.getCartCounter().waitFor();
   }
 
-  async expectBookVisible(titlePart: string): Promise<void> {
-    await expect(this.catalogPage.getBookItems().filter({ hasText: titlePart }).first()).toBeVisible();
+  async expectAllVisibleBooksContain(text: string): Promise<void> {
+    const titles = this.catalogPage.getBookTitles();
+
+    await expect.poll(async () => {
+      const count = await this.catalogPage.getBookItems().count();
+      if (count === 0) return false;
+      const matching = await titles.filter({ hasText: text }).count();
+      return matching === count;
+    }).toBe(true);
   }
 
-  async expectFirstBookContains(text: string): Promise<void> {
-    await expect(this.catalogPage.getBookItems().first()).toContainText(text);
+  async expectAllVisibleBooksInCategory(category: string): Promise<void> {
+    const categories = this.catalogPage.getBookCategories();
+
+    await expect.poll(async () => {
+      const count = await this.catalogPage.getBookItems().count();
+      if (count === 0) return false;
+      const matching = await categories.filter({ hasText: category }).count();
+      return matching === count;
+    }).toBe(true);
   }
 
-  async expectFirstBookShowsPrice(): Promise<void> {
-    await expect(this.catalogPage.getBookItems().first()).toContainText('$');
+  async expectPricesSorted(order: 'asc' | 'desc'): Promise<void> {
+    await expect.poll(async () => {
+      const prices = await this.readVisibleBookPrices();
+      if (prices.length < 2) return false;
+      return prices.every(
+        (price, index) =>
+          index === 0 ||
+          (order === 'asc' ? price >= prices[index - 1] : price <= prices[index - 1]),
+      );
+    }).toBe(true);
   }
 
   async expectNoResults(): Promise<void> {
     await expect(this.catalogPage.getNoResultsMessage()).toBeVisible();
+    await expect(this.catalogPage.getBookItems()).toHaveCount(0);
+  }
+
+  private async readVisibleBookPrices(): Promise<number[]> {
+    return this.catalogPage.getBookPrices().evaluateAll((elements) =>
+      elements.map((element) => Number(element.getAttribute('data-price'))),
+    );
   }
 
   async expectCartCount(count: number): Promise<void> {

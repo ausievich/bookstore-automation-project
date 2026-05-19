@@ -30,6 +30,7 @@ export class CartSteps {
 
   async expectEmptyCart(): Promise<void> {
     await expect(this.cartPage.getEmptyMessage()).toBeVisible();
+    await expect(this.cartPage.getItems()).toHaveCount(0);
   }
 
   async expectSubtotalContains(amount: string): Promise<void> {
