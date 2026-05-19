@@ -2,6 +2,7 @@
  * Domain: Online Bookstore
  * Feature: Book Search & Filtering
  * Owner: bookstore-qa
+ * Test Description: Search, category filter, price sort, and empty results
  */
 import { test } from '@automation/test/test-base/fixtures';
 import { loginAsBookstoreUser } from '@automation/test/test-base/ui-login';
@@ -59,6 +60,22 @@ test.describe('Book Search & Filtering', () => {
 
     await test.step('Verify books sorted by price ascending', async () => {
       await catalog.expectPricesSorted('asc');
+    });
+  });
+
+  test('@TmsLink:C2005 sort by price descending', async ({ page }) => {
+    const catalog = new CatalogSteps(page);
+
+    await test.step('Open catalog', async () => {
+      await catalog.openCatalog();
+    });
+
+    await test.step('Sort books by price descending', async () => {
+      await catalog.sortByPrice('price_desc');
+    });
+
+    await test.step('Verify books sorted by price descending', async () => {
+      await catalog.expectPricesSorted('desc');
     });
   });
 

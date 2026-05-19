@@ -2,6 +2,7 @@
  * Domain: Online Bookstore
  * Feature: Cart API
  * Owner: bookstore-qa
+ * Test Description: Cart item lifecycle and stock limit validation
  */
 import { test, expect } from '@automation/test/test-base/fixtures';
 import { CartController } from '@automation/main/api/controllers/cart.controller';

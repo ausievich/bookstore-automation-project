@@ -2,6 +2,7 @@
  * Domain: Online Bookstore
  * Feature: Orders API
  * Owner: bookstore-qa
+ * Test Description: Order placement, listing, and status transitions
  */
 import { test, expect } from '@automation/test/test-base/fixtures';
 import { addBookToCartViaApi } from '@automation/test/test-base/api-cart-setup';

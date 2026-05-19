@@ -2,6 +2,7 @@
  * Domain: Online Bookstore
  * Feature: Books CRUD API
  * Owner: bookstore-qa
+ * Test Description: Books REST CRUD operations, pagination, and auth errors
  */
 import { test, expect } from '@automation/test/test-base/fixtures';
 import { BookBuilder } from '@automation/main/api/builders/book.builder';

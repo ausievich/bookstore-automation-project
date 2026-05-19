@@ -2,6 +2,7 @@
  * Domain: Online Bookstore
  * Feature: Checkout Flow
  * Owner: bookstore-qa
+ * Test Description: Multi-step checkout through order confirmation and My Orders
  */
 import { test } from '@automation/test/test-base/fixtures';
 import { loginAsBookstoreUser } from '@automation/test/test-base/ui-login';

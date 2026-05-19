@@ -2,6 +2,7 @@
  * Domain: Online Bookstore
  * Feature: Shopping Cart
  * Owner: bookstore-qa
+ * Test Description: Add, update, remove items and empty cart state
  */
 import { test } from '@automation/test/test-base/fixtures';
 import { loginAsBookstoreUser } from '@automation/test/test-base/ui-login';
